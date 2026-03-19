@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --theme-primary: #ff6a00;
+  --theme-muted: #e2bfb0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-brand-bg: #131313;
+  --color-brand-primary: var(--theme-primary);
+  --color-brand-surface: #1c1b1b;
+  --color-brand-surface-high: #2a2a2a;
+  --color-brand-text: #e5e2e1;
+  --color-brand-muted: var(--theme-muted);
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-mono: "Fira Code", monospace;
+  --font-jersey: var(--font-jersey, sans-serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-text);
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Scroll reveal — initial hidden states handled purely in CSS */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: none; /* anime.js controls the transition */
 }
+
+/* For stagger groups, the children start hidden */
+.reveal-on-scroll .reveal-child {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+/* Shown state (set by anime.js inline styles via target) */
+.is-visible {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+::selection {
+  background-color: var(--color-brand-primary);
+  color: #fff;
+}
+
