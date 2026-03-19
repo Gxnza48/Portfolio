@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import anime from "animejs";
+import ProjectPreview from "@/components/ProjectPreview";
 
 const projects = [
   {
@@ -12,6 +13,7 @@ const projects = [
     description: "Advanced modular store for gaming ecosystems with multi-gateway integration.",
     link: "https://bulletbull.shop/",
     repo: "https://github.com/Gxnza48",
+    image: "/projects/bulletbull.png",
     tags: ["React.js", "Stripe"]
   },
   {
@@ -19,6 +21,7 @@ const projects = [
     description: "Data science analysis repo & learning products built for digital learners.",
     link: "https://r0xx.vercel.app/",
     repo: "https://github.com/Gxnza48",
+    image: "/projects/rox.png",
     tags: ["Python", "Data Science"]
   },
   {
@@ -26,6 +29,7 @@ const projects = [
     description: "High-end editorial portfolio design for cinematic visual directors.",
     link: "https://facundodiazportfolio.onrender.com/",
     repo: "https://github.com/Gxnza48/FacundoDiazPortfolio",
+    image: "/projects/facundo.png",
     tags: ["React", "Animations", "UI"]
   },
   {
@@ -33,6 +37,7 @@ const projects = [
     description: "Modern booking experience for a sleek barber shop brand.",
     link: "https://kanki.vercel.app/",
     repo: "https://github.com/Gxnza48/Kanki-Barber-Shop",
+    image: "/projects/kanki.png",
     tags: ["React", "UI/UX"]
   },
   {
@@ -40,6 +45,7 @@ const projects = [
     description: "Performance optimization and system tweaking dashboard.",
     link: "https://hawl.vercel.app/",
     repo: "https://github.com/Gxnza48/Hawl-Tweaks",
+    image: "/projects/hawl.png",
     tags: ["React", "Performance"]
   },
   {
@@ -47,6 +53,7 @@ const projects = [
     description: "Dynamic web application with a modern component-driven architecture.",
     link: "https://rapix.netlify.app/",
     repo: "https://github.com/Gxnza48/Rapix",
+    image: "/projects/rapix.png",
     tags: ["Web App", "UI"]
   }
 ];
@@ -408,7 +415,9 @@ export default function Home() {
                 <div className="absolute top-0 right-0 w-32 h-px bg-gradient-to-l from-brand-primary/80 to-transparent rotate-45 translate-x-12 -translate-y-8 group-hover:translate-x-4 opacity-0 group-hover:opacity-100 transition-all duration-700" />
                 <div className="absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-duration-500" />
                 
-                <div className="flex justify-between items-start mb-16 relative z-10">
+                <ProjectPreview image={proj.image} title={proj.title} />
+
+                <div className="flex justify-between items-start mb-8 relative z-10">
                   <div className="space-y-4">
                     <h3 className="text-3xl font-display font-black text-white/90 group-hover:text-brand-primary group-hover:translate-x-2 transition-all duration-300">{proj.title}</h3>
                     <p className="text-brand-muted leading-relaxed max-w-sm font-light">
