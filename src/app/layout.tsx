@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Manrope, Fira_Code, Jersey_10 } from "next/font/google";
+import {
+  Space_Grotesk,
+  Manrope,
+  Fira_Code,
+  Jersey_10,
+  News_Cycle,
+} from "next/font/google";
 import "./globals.css";
 import "devicon/devicon.min.css";
 import React from "react";
 import { SmoothScroller } from "@/components/SmoothScroller";
+import { ThemeProvider } from "@/lib/theme";
+import { SITE } from "@/data/content";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
@@ -26,9 +34,16 @@ const jersey10 = Jersey_10({
   subsets: ["latin"],
 });
 
+// News Gothic-style face for the authentic opening crawl.
+const newsCycle = News_Cycle({
+  weight: ["400", "700"],
+  variable: "--font-crawl",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Gonzalo Bonadeo | Creative Builder",
-  description: "Frontend Developer / Web Developer focusing on sleek web experiences.",
+  title: SITE.metaTitle,
+  description: SITE.metaDescription,
 };
 
 export default function RootLayout({
@@ -39,11 +54,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${manrope.variable} ${firaCode.variable} ${jersey10.variable} antialiased`}
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${manrope.variable} ${firaCode.variable} ${jersey10.variable} ${newsCycle.variable} antialiased`}
     >
-      <body suppressHydrationWarning className="min-h-screen bg-brand-bg text-brand-text flex flex-col selection:bg-brand-primary">
-        <SmoothScroller />
-        {children}
+      <body
+        suppressHydrationWarning
+        className="min-h-screen bg-brand-bg text-brand-text flex flex-col"
+      >
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
+        <ThemeProvider>
+          <SmoothScroller />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
