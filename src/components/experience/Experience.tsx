@@ -13,7 +13,6 @@ import dynamic from "next/dynamic";
 
 import Crawl from "@/components/sw/Crawl";
 import ThemeToggle from "@/components/sw/ThemeToggle";
-import SoundToggle from "@/components/sw/SoundToggle";
 import ForceLightning from "@/components/sw/ForceLightning";
 import SaberDivider from "@/components/sw/SaberDivider";
 
@@ -38,7 +37,6 @@ export default function Experience() {
 
       {/* Fixed global controls */}
       <div className="fixed bottom-6 right-6 z-[120] flex items-center gap-3">
-        <SoundToggle />
         <ThemeToggle />
       </div>
 

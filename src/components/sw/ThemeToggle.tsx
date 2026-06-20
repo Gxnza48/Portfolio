@@ -4,17 +4,15 @@
  * ThemeToggle — a lightsaber switch that toggles the Force side
  * (Jedi / light  ⇄  Sith / dark).
  *
- * Visual: a hilt with an ignited blade. The blade color reflects the active
- * side (blue in jedi, red in sith) over a white-hot core with bloom. Clicking
- * retracts the blade and re-ignites it in the new color (a quick "blade swap"),
- * then calls toggle(). Honors prefers-reduced-motion by swapping instantly.
+ * The blade color reflects the active side (blue in jedi, red in sith) over a
+ * white-hot core with bloom. Clicking toggles the theme with a brief CSS
+ * "ignition" pulse (skipped under reduced motion). Pure CSS — no animation
+ * library — so it is SSR-safe and has no compile/runtime hazards.
  *
- * Prop-less, self-contained (styled-jsx). Theme tokens are not hardcoded here;
- * saber colors are intentional, explicit per the task spec.
+ * Prop-less, self-contained. Saber colors are explicit per the task spec.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useAnimationControls } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme, type Side } from "@/lib/theme";
 import { useReducedMotion } from "@/lib/useReducedMotion";
@@ -26,67 +24,25 @@ const SABER: Record<Side, string> = {
 };
 const CORE = "#FFFFFF";
 
-/** Duration (seconds) of a single retract/extend phase. */
-const PHASE = 0.18;
-
 export default function ThemeToggle() {
   const { side, toggle } = useTheme();
   const reduced = useReducedMotion();
+  const [igniting, setIgniting] = useState(false);
+  const timer = useRef<number | null>(null);
 
-  /** Color currently painted on the blade (decoupled from `side` mid-swap). */
-  const [bladeSide, setBladeSide] = useState<Side>(side);
-  const [swapping, setSwapping] = useState(false);
-
-  const blade = useAnimationControls();
-  const timers = useRef<number[]>([]);
-
-  const target: Side = side === "jedi" ? "sith" : "jedi";
-  const bladeColor = SABER[bladeSide];
-
-  // Keep the painted blade in sync if the side changes externally
-  // (e.g. another control) while we are not mid-swap.
   useEffect(() => {
-    if (!swapping) setBladeSide(side);
-  }, [side, swapping]);
-
-  // Clear any pending timeouts on unmount.
-  useEffect(() => {
-    const pending = timers.current;
     return () => {
-      pending.forEach((id) => window.clearTimeout(id));
+      if (timer.current !== null) window.clearTimeout(timer.current);
     };
   }, []);
 
   const handleClick = useCallback(() => {
-    if (reduced) {
-      // Instant swap, no animation.
-      toggle();
-      return;
-    }
-    if (swapping) return;
-    setSwapping(true);
-
-    // Retract → swap color → re-ignite.
-    blade
-      .start({
-        scaleY: 0.04,
-        opacity: 0.35,
-        transition: { duration: PHASE, ease: "easeIn" },
-      })
-      .then(() => {
-        toggle();
-        setBladeSide(target);
-        return blade.start({
-          scaleY: 1,
-          opacity: 1,
-          transition: { duration: PHASE * 1.4, ease: [0.22, 1, 0.36, 1] },
-        });
-      })
-      .then(() => {
-        const id = window.setTimeout(() => setSwapping(false), 0);
-        timers.current.push(id);
-      });
-  }, [reduced, swapping, blade, toggle, target]);
+    toggle();
+    if (reduced) return;
+    setIgniting(true);
+    if (timer.current !== null) window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setIgniting(false), 440);
+  }, [toggle, reduced]);
 
   const label =
     side === "jedi"
@@ -103,21 +59,17 @@ export default function ThemeToggle() {
       aria-pressed={side === "sith"}
       className="tt-root group"
     >
-      <span className="tt-saber" aria-hidden="true">
-        {/* Blade — animated retract/extend; reduced-motion renders it static. */}
-        <motion.span
-          className="tt-blade"
-          initial={false}
-          animate={reduced ? undefined : blade}
-          style={{
-            transformOrigin: "bottom center",
-            ["--blade" as string]: bladeColor,
-          }}
-        >
+      <span
+        className="tt-saber"
+        aria-hidden="true"
+        style={{ ["--blade" as string]: SABER[side] }}
+      >
+        {/* Blade — color transitions on side change; ignition pulse on click. */}
+        <span className={igniting ? "tt-blade tt-blade--ignite" : "tt-blade"}>
           <span className="tt-blade-glow" />
           <span className="tt-blade-core" />
           <span className="tt-blade-tip" />
-        </motion.span>
+        </span>
 
         {/* Hilt */}
         <span className="tt-hilt">
@@ -147,7 +99,7 @@ export default function ThemeToggle() {
           line-height: 1;
           -webkit-tap-highlight-color: transparent;
           transition: border-color 0.2s ease, background 0.2s ease,
-            box-shadow 0.2s ease, transform 0.12s ease;
+            transform 0.12s ease;
         }
         .tt-root:hover {
           background: var(--c-surface-high);
@@ -161,7 +113,6 @@ export default function ThemeToggle() {
           outline-offset: 3px;
         }
 
-        /* Saber assembly — vertical: blade on top, hilt below. */
         .tt-saber {
           position: relative;
           display: inline-flex;
@@ -178,6 +129,21 @@ export default function ThemeToggle() {
           display: block;
           border-radius: 3px 3px 1px 1px;
           background: var(--blade);
+          transform-origin: bottom center;
+          transition: background-color 0.4s ease;
+        }
+        .tt-blade--ignite {
+          animation: tt-ignite 0.44s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes tt-ignite {
+          0% {
+            transform: scaleY(0.06);
+            opacity: 0.4;
+          }
+          100% {
+            transform: scaleY(1);
+            opacity: 1;
+          }
         }
         .tt-blade-core {
           position: absolute;
@@ -213,7 +179,6 @@ export default function ThemeToggle() {
           box-shadow: 0 0 6px var(--blade), 0 0 10px var(--blade);
         }
 
-        /* Hilt */
         .tt-hilt {
           position: relative;
           display: flex;
@@ -259,11 +224,11 @@ export default function ThemeToggle() {
           gap: 0.3rem;
         }
         .tt-icon {
-          color: var(--blade-meta, var(--c-muted));
+          color: var(--c-muted);
         }
         .tt-label {
-          font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo,
-            Consolas, monospace;
+          font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+            monospace;
           font-size: 0.65rem;
           font-weight: 600;
           letter-spacing: 0.12em;
@@ -275,6 +240,11 @@ export default function ThemeToggle() {
           .tt-root:active {
             transition: none;
             transform: none;
+          }
+          .tt-blade,
+          .tt-blade--ignite {
+            transition: none;
+            animation: none;
           }
         }
       `}</style>
