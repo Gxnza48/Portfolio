@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import type { CSSProperties } from "react";
+import { AiStudio, TechnologyDna } from "./CapabilitiesSections";
 
 type VisualKind = "chain" | "arena" | "archive" | "document" | "chat" | "velocity" | "note" | "network";
 type Language = "es" | "en";
@@ -226,8 +227,8 @@ const experiments: Project[] = [
 
 const navItems = [
   { href: "#work", label: { es: "Proyectos", en: "Work" } },
-  { href: "#approach", label: { es: "Enfoque", en: "Approach" } },
-  { href: "#lab", label: { es: "Laboratorio", en: "Lab" } },
+  { href: "#technologies", label: { es: "ADN", en: "DNA" } },
+  { href: "#ai", label: { es: "IA", en: "AI" } },
   { href: "#contact", label: { es: "Contacto", en: "Contact" } },
 ];
 
@@ -644,6 +645,9 @@ export default function PortfolioExperience() {
         </div>
       </section>
 
+      <TechnologyDna language={language} />
+      <AiStudio language={language} />
+
       <section id="approach" className="approach section-shell" aria-labelledby="approach-title">
         <motion.div
           className="approach__statement"
@@ -651,7 +655,7 @@ export default function PortfolioExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
         >
-          <p className="eyebrow"><span>03</span> {text.approachLabel}</p>
+          <p className="eyebrow"><span>05</span> {text.approachLabel}</p>
           <h2 id="approach-title">{text.approachTitleA}<br /><em>{text.approachTitleB}</em></h2>
         </motion.div>
         <div className="approach__grid">
@@ -681,7 +685,7 @@ export default function PortfolioExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
         >
-          <p className="eyebrow"><span>04</span> {text.labLabel}</p>
+          <p className="eyebrow"><span>06</span> {text.labLabel}</p>
           <h2 id="lab-title">{text.labTitle}<span>.</span></h2>
           <p>{text.labDesc}</p>
         </motion.div>
@@ -728,7 +732,7 @@ export default function PortfolioExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          <p className="eyebrow"><span>05</span> {text.contactLabel}</p>
+          <p className="eyebrow"><span>07</span> {text.contactLabel}</p>
           <h2 id="contact-title">{text.contactTitleA}<br /><em>{text.contactTitleB}</em></h2>
           <p>{text.contactDesc}</p>
           <div className="contact__actions">

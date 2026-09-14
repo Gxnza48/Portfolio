@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Manrope, Fira_Code, Jersey_10 } from "next/font/google";
 import "./globals.css";
+import "devicon/devicon.min.css";
+import "./capabilities.css";
 import React from "react";
 
 const spaceGrotesk = Space_Grotesk({

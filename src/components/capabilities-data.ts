@@ -1,0 +1,81 @@
+export type Locale = "es" | "en";
+export type Discipline = "code" | "interface" | "motion" | "systems" | "intelligence" | "tools";
+export const disciplines: { id: Discipline; es: string; en: string; description: Record<Locale, string> }[] = [
+  { id: "code", es: "Lenguajes", en: "Languages", description: { es: "La base para construir en la web, el escritorio y más allá.", en: "The foundation for building on the web, desktop and beyond." } },
+  { id: "interface", es: "Interfaces", en: "Interfaces", description: { es: "Componentes, estado y sistemas visuales que hacen simple lo complejo.", en: "Components, state and visual systems that make complexity feel simple." } },
+  { id: "motion", es: "Movimiento & 3D", en: "Motion & 3D", description: { es: "Profundidad, interacción y movimiento que le dan personalidad al producto.", en: "Depth, interaction and motion that give a product its personality." } },
+  { id: "systems", es: "Sistemas", en: "Systems", description: { es: "Datos, servicios y experiencias conectadas en tiempo real.", en: "Data, services and experiences connected in real time." } },
+  { id: "intelligence", es: "Datos & IA", en: "Data & AI", description: { es: "Análisis, modelos y flujos de IA llevados a aplicaciones concretas.", en: "Analysis, models and AI workflows brought into real applications." } },
+  { id: "tools", es: "Herramientas", en: "Tooling", description: { es: "El entorno para desarrollar, probar y publicar con cuidado.", en: "The environment for thoughtfully building, testing and shipping." } },
+];
+
+export type Technology = { name: string; icon?: string; monogram?: string; group: Discipline; repo: string; file: string; color: string };
+const tech = (name: string, icon: string | undefined, group: Discipline, repo: string, color: string, file = "package.json", monogram?: string): Technology => ({ name, icon, group, repo, color, file, monogram });
+// Audited against public manifests, notebooks and the profile README on 2026-09-14.
+// Icons are from the installed Devicon package; unrepresented libraries use typography.
+export const technologies: Technology[] = [
+  tech("TypeScript", "typescript-plain", "code", "Ucanet", "#6ba7ed"),
+  tech("JavaScript", "javascript-plain", "code", "Ruleta", "#efd86b"),
+  tech("Python", "python-plain", "code", "Gxnza48", "#79b3e2", "README.md"),
+  tech("Rust", "rust-original", "code", "notita", "#e2a88f", "src-tauri/Cargo.toml"),
+  tech("HTML", "html5-plain", "code", "Gxnza48", "#ef8c6e", "README.md"),
+  tech("CSS", "css3-plain", "code", "Gxnza48", "#7fb8ed", "README.md"),
+  tech("Lua", "lua-plain", "code", "Gxnza48", "#aba9f1", "README.md"),
+  tech("C#", "csharp-plain", "code", "Gxnza48", "#c4a1ed", "README.md"),
+  tech("React", "react-original", "interface", "Chain-work", "#8bdbed"),
+  tech("Next.js", "nextjs-plain", "interface", "MajorScrims", "#e5e1da"),
+  tech("Tailwind CSS", "tailwindcss-original", "interface", "Portfolio", "#78d7e5"),
+  tech("Radix UI", undefined, "interface", "Ucanet", "#d6c8ea", "package.json", "Rx"),
+  tech("Zustand", "zustand-plain", "interface", "Chain-work", "#d2b99e"),
+  tech("Tiptap", undefined, "interface", "notita", "#e0dbd1", "package.json", "Tt"),
+  tech("React Router", "reactrouter-plain", "interface", "Chain-work", "#ed9b9c"),
+  tech("TanStack Query", undefined, "interface", "Kanki-Barber-Shop", "#eab983", "package.json", "TQ"),
+  tech("React Hook Form", undefined, "interface", "Kanki-Barber-Shop", "#e79abc", "package.json", "Rh"),
+  tech("Zod", undefined, "interface", "Ucanet", "#8eb9e9", "package.json", "Z"),
+  tech("Bootstrap", "bootstrap-plain", "interface", "Gxnza48", "#c2a0f4", "README.md"),
+  tech("i18next", undefined, "interface", "MateAndo", "#83cbbc", "package.json", "i18"),
+  tech("GSAP", undefined, "motion", "Hawl-Tweaks", "#b7e978", "package.json", "Gs"),
+  tech("Framer Motion", "framermotion-original", "motion", "Chain-work", "#d3aeeb"),
+  tech("Three.js", "threejs-original", "motion", "Hawl-Tweaks", "#dcd7ce"),
+  tech("React Three Fiber", "react-original", "motion", "Hawl-Tweaks", "#b5d9ed"),
+  tech("Lenis", undefined, "motion", "MajorScrims", "#e9b2a2", "package.json", "Le"),
+  tech("Anime.js", undefined, "motion", "Portfolio", "#ebba80", "package.json", "An"),
+  tech("Recharts", undefined, "motion", "Chat-stats", "#93bdea", "package.json", "Rc"),
+  tech("Leaflet", undefined, "motion", "Perdido", "#b9d79f", "package.json", "Lf"),
+  tech("Node.js", "nodejs-plain", "systems", "Gxnza48", "#a6d188", "README.md"),
+  tech("Supabase", "supabase-plain", "systems", "Chain-work", "#8cdcb1"),
+  tech("PostgreSQL / Neon", "postgresql-plain", "systems", "rox", "#91b5d6"),
+  tech("MongoDB", "mongodb-plain", "systems", "MajorScrims", "#a7d68f"),
+  tech("Mongoose", "mongoose-original", "systems", "MajorScrims", "#dca1a1"),
+  tech("Firebase", "firebase-plain", "systems", "CrocoGOOL-Web", "#edc575"),
+  tech("SQLite", "sqlite-plain", "systems", "notita", "#8ccce3", "src-tauri/Cargo.toml"),
+  tech("Tauri", "tauri-plain", "systems", "notita", "#e8d197"),
+  tech("Electron", "electron-original", "systems", "Gxnza48", "#a4d7de", "README.md"),
+  tech("Socket.IO", "socketio-original", "systems", "Vacas-y-Toros", "#dbd7cf"),
+  tech("AWS S3", "amazonwebservices-plain-wordmark", "systems", "Ucanet", "#efba7c"),
+  tech("NextAuth", undefined, "systems", "MajorScrims", "#c4a2de", "package.json", "Au"),
+  tech("Jupyter", "jupyter-plain", "intelligence", "PavonRepo", "#e9ad81", "Trabajo_Final_Heart_Disease.ipynb"),
+  tech("pandas", "pandas-plain", "intelligence", "PavonRepo", "#c5b1ef", "Trabajo_Final_Heart_Disease.ipynb"),
+  tech("NumPy", "numpy-plain", "intelligence", "PavonRepo", "#a1c9e8", "Trabajo_Final_Heart_Disease.ipynb"),
+  tech("scikit-learn", "scikitlearn-plain", "intelligence", "PavonRepo", "#edbd87", "Trabajo_Final_Heart_Disease.ipynb"),
+  tech("Matplotlib", "matplotlib-plain", "intelligence", "PavonRepo", "#acd0e5", "Trabajo_Final_Heart_Disease.ipynb"),
+  tech("Seaborn", undefined, "intelligence", "PavonRepo", "#a6c6d9", "Trabajo_Final_Heart_Disease.ipynb", "Sb"),
+  tech("OpenAI SDK", undefined, "intelligence", "UCAHUB", "#acd7c1", "package.json", "AI"),
+  tech("Gemini API", undefined, "intelligence", "Rand0m", "#abbdf2", "package.json", "Gm"),
+  tech("Claude Code", undefined, "intelligence", "PDFjedi", "#e7ad95", "README.md", "Cl"),
+  tech("Whisper", undefined, "intelligence", "notita", "#b3d8c9", "src-tauri/Cargo.toml", "Wh"),
+  tech("Git", "git-plain", "tools", "Gxnza48", "#eaa18b", "README.md"),
+  tech("Vite", "vitejs-plain", "tools", "Chain-work", "#c9a7f0"),
+  tech("Vitest", "vitest-plain", "tools", "Ucanet", "#c1d995"),
+  tech("Playwright", "playwright-plain", "tools", "Ucanet", "#a9d6ad"),
+  tech("ESLint", "eslint-plain", "tools", "Ucanet", "#bdb0e5"),
+  tech("Prettier", undefined, "tools", "Ucanet", "#e4bd9c", "package.json", "Pr"),
+  tech("Babel", "babel-plain", "tools", "Gxnza48", "#e7d59c", "README.md"),
+  tech("Vercel", "vercel-original", "tools", "Chain-work", "#e5dfd6"),
+  tech("PostCSS", "postcss-original", "tools", "Chain-work", "#dfaa9d"),
+  tech("Sentry", "sentry-original", "tools", "Ucanet", "#d5afc8"),
+];
+
+export function technologySource(technology: Technology) {
+  return `https://github.com/Gxnza48/${technology.repo}/blob/main/${technology.file}`;
+}
