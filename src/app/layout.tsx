@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Manrope, Fira_Code, Jersey_10 } from "next/font/google";
 import "./globals.css";
-import "devicon/devicon.min.css";
 import React from "react";
-import { SmoothScroller } from "@/components/SmoothScroller";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-display",
@@ -27,8 +25,8 @@ const jersey10 = Jersey_10({
 });
 
 export const metadata: Metadata = {
-  title: "Gonzalo Bonadeo | Creative Builder",
-  description: "Frontend Developer / Web Developer focusing on sleek web experiences.",
+  title: "Gonzalo Bonadeo — Digital Product Builder",
+  description: "Selected digital products, systems and motion-led interfaces by Gonzalo Bonadeo.",
 };
 
 export default function RootLayout({
@@ -42,7 +40,6 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${manrope.variable} ${firaCode.variable} ${jersey10.variable} antialiased`}
     >
       <body suppressHydrationWarning className="min-h-screen bg-brand-bg text-brand-text flex flex-col selection:bg-brand-primary">
-        <SmoothScroller />
         {children}
       </body>
     </html>

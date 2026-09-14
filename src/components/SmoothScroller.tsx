@@ -5,6 +5,9 @@ import Lenis from "@studio-freight/lenis";
 
 export const SmoothScroller = () => {
   useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -15,14 +18,17 @@ export const SmoothScroller = () => {
       touchMultiplier: 2,
     });
 
+    let frameId = 0;
+
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      frameId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    frameId = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(frameId);
       lenis.destroy();
     };
   }, []);
