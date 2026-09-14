@@ -25,8 +25,8 @@ const jersey10 = Jersey_10({
 });
 
 export const metadata: Metadata = {
-  title: "Gonzalo Bonadeo — Digital Product Builder",
-  description: "Selected digital products, systems and motion-led interfaces by Gonzalo Bonadeo.",
+  title: "Gonzalo Bonadeo — Desarrollador digital",
+  description: "Productos digitales, sistemas e interfaces con movimiento, creados por Gonzalo Bonadeo desde Rosario, Argentina.",
 };
 
 export default function RootLayout({
@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es-AR"
       className={`${spaceGrotesk.variable} ${manrope.variable} ${firaCode.variable} ${jersey10.variable} antialiased`}
     >
       <body suppressHydrationWarning className="min-h-screen bg-brand-bg text-brand-text flex flex-col selection:bg-brand-primary">

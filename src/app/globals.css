@@ -14,6 +14,18 @@
   --pointer-y: 18%;
 }
 
+:root[data-theme="day"] {
+  color-scheme: light;
+  --ink: #f2efe9;
+  --ink-raised: #fffdf9;
+  --ink-soft: #e8e3da;
+  --paper: #24221f;
+  --paper-muted: #706b64;
+  --line: rgba(36, 34, 31, 0.14);
+  --line-strong: rgba(36, 34, 31, 0.26);
+  --accent: #c45216;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -119,7 +131,7 @@ button {
   top: 0;
   left: 50%;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
   align-items: center;
   width: min(100% - 5rem, 86rem);
   min-height: 5.75rem;
@@ -1319,6 +1331,54 @@ button {
 @keyframes indicator-pulse {
   0%, 100% { opacity: 0.68; transform: scale(0.9); }
   50% { opacity: 1; transform: scale(1.08); }
+}
+
+.site-nav__tools { display: flex; align-items: center; justify-self: end; gap: .45rem; }
+.site-nav__tool { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 2.5rem; padding: 0 .75rem; border: 1px solid var(--line-strong); border-radius: 999px; background: rgba(255,255,255,.035); color: var(--paper); font: .62rem var(--font-mono), monospace; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: background 180ms ease, border-color 180ms ease, transform 180ms ease; }
+.site-nav__tool:hover { transform: translateY(-1px); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.locale-toggle__flag { display: block; width: 1.25rem; height: .85rem; border-radius: 2px; background-position: center; background-size: cover; box-shadow: 0 0 0 1px #ffffff26; }
+.site-nav__menu-button { grid-column: 5; }
+
+html[data-theme="day"] { scrollbar-color: #c45216 #e5e0d7; }
+html[data-theme="day"] body,
+html[data-theme="day"] .site-shell { background: #f2efe9; color: #24221f; }
+html[data-theme="day"] .site-shell { background: linear-gradient(180deg, #faf8f4 0%, #f2efe9 48%, #eae5dc 100%); }
+html[data-theme="day"] .site-shell__atmosphere { opacity: .56; }
+html[data-theme="day"] .site-shell__grid { opacity: .3; background-image: linear-gradient(rgba(36,34,31,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(36,34,31,.035) 1px,transparent 1px); }
+html[data-theme="day"] .site-nav { background: rgba(250,248,244,.88); border-color: rgba(36,34,31,.12); box-shadow: 0 12px 45px rgba(36,34,31,.1), inset 0 1px 0 #fff; }
+html[data-theme="day"] .site-nav__links a:last-child { color: #fffaf4; }
+html[data-theme="day"] .site-nav__tool { background: rgba(36,34,31,.035); }
+html[data-theme="day"] .site-nav__menu-button { border-color: var(--line-strong); }
+html[data-theme="day"] .hero__title span,
+html[data-theme="day"] .approach__statement h2 em,
+html[data-theme="day"] .contact h2 em { -webkit-text-stroke-color: rgba(36,34,31,.45); }
+html[data-theme="day"] .hero__statement,
+html[data-theme="day"] .section-heading > p:last-child,
+html[data-theme="day"] .approach__grid p,
+html[data-theme="day"] .contact__content > p:last-of-type { color: #5d5851; }
+html[data-theme="day"] .approach__grid { border-color: var(--line); }
+html[data-theme="day"] .approach__grid article + article { border-color: var(--line); }
+html[data-theme="day"] .experiment-card { border-color: rgba(36,34,31,.12); background: rgba(255,255,255,.52); box-shadow: 0 18px 50px rgba(36,34,31,.06); }
+html[data-theme="day"] .experiment-card__meta,
+html[data-theme="day"] .experiment-card p,
+html[data-theme="day"] .site-footer { color: #706b64; }
+html[data-theme="day"] .button--quiet { border-color: var(--line-strong); background: rgba(36,34,31,.025); }
+html[data-theme="day"] .button--quiet:hover { background: rgba(36,34,31,.06); }
+html[data-theme="day"] .mobile-navigation { background: #faf8f4; }
+html[data-theme="day"] .mobile-navigation a:hover { background: rgba(36,34,31,.05); }
+html[data-theme="day"] ::-webkit-scrollbar-track { background: #e5e0d7; }
+html[data-theme="day"] ::-webkit-scrollbar-thumb { border-color: #e5e0d7; }
+
+@media (max-width: 780px) {
+  .site-nav { grid-template-columns: auto minmax(0,1fr) auto auto; gap: .45rem; padding: 0 .75rem 0 1rem; }
+  .site-nav__tools { grid-column: 3; }
+  .site-nav__menu-button { grid-column: 4; }
+  .site-nav__tool { min-height: 2.35rem; padding: 0 .55rem; }
+}
+
+@media (max-width: 390px) {
+  .theme-toggle span { display: none; }
+  .site-nav__tool { width: 2.35rem; padding: 0; }
 }
 
 @keyframes drift-spin {

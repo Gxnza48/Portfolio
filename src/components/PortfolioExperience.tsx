@@ -15,12 +15,16 @@ import {
   Mail,
   Menu,
   MoveRight,
+  Moon,
+  Sun,
   X,
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import type { CSSProperties } from "react";
 
 type VisualKind = "chain" | "arena" | "archive" | "document" | "chat" | "velocity" | "note" | "network";
+type Language = "es" | "en";
+type Theme = "night" | "day";
 
 type Project = {
   id: string;
@@ -221,11 +225,70 @@ const experiments: Project[] = [
 ];
 
 const navItems = [
-  { href: "#work", label: "Work" },
-  { href: "#approach", label: "Approach" },
-  { href: "#lab", label: "Lab" },
-  { href: "#contact", label: "Contact" },
+  { href: "#work", label: { es: "Proyectos", en: "Work" } },
+  { href: "#approach", label: { es: "Enfoque", en: "Approach" } },
+  { href: "#lab", label: { es: "Laboratorio", en: "Lab" } },
+  { href: "#contact", label: { es: "Contacto", en: "Contact" } },
 ];
+
+const ui = {
+  es: {
+    available: "Disponible para proyectos seleccionados", location: "Desarrollador digital independiente · Rosario, Argentina",
+    heroStatement: "Diseño y desarrollo productos digitales con intención: sistemas útiles, interfaces memorables y movimiento que tiene un propósito.",
+    explore: "Ver proyectos", github: "Explorar GitHub", role: "Desarrollador y creador digital", based: "Desde Rosario, Argentina",
+    scroll: "Deslizá para explorar", skip: "Saltar a proyectos", caseLabel: "Casos seleccionados",
+    workTitle: "Proyectos destacados", workDesc: "Seis proyectos que muestran variedad sin perder el hilo: criterio de producto, profundidad técnica e intuición visual.",
+    projectLabel: "Recorré los proyectos", projectHint: "Seguí bajando para descubrir cada proyecto o elegí uno para ir directamente.",
+    live: "Producto en línea", source: "Código fuente", liveLink: "Ver proyecto", sourceLink: "Ver código",
+    approachLabel: "Cómo trabajo", approachTitleA: "El diseño se siente.", approachTitleB: "La ingeniería lo demuestra.",
+    approach1Title: "Primero, el producto", approach1: "Cada interfaz parte de una experiencia que vale la pena mejorar; después construyo un sistema visual que la vuelve intuitiva.",
+    approach2Title: "Movimiento con intención", approach2: "Las animaciones guían la atención, explican los cambios y le dan ritmo al producto.",
+    approach3Title: "Hechos antes que promesas", approach3: "Sistemas en tiempo real, accesibilidad, pruebas y decisiones cuidadas hablan por sí solos.",
+    labLabel: "Experimentos seleccionados", labTitle: "Otros proyectos, el mismo cuidado", labDesc: "Herramientas de escritorio, comunidades y dirección visual; otros proyectos del archivo que también vale la pena conocer.",
+    keepScroll: "Seguí bajando para explorar", contactLabel: "Empecemos algo bueno", contactTitleA: "¿Tenés una idea interesante?", contactTitleB: "Démosle impulso.",
+    contactDesc: "Estoy abierto a colaborar en productos digitales, experiencias web y proyectos donde los detalles importen.",
+    email: "Escribime", whatsapp: "WhatsApp", copy: "Copiar correo", copied: "Copiado", footer: "Hecho con intención, sin relleno.",
+    languageLabel: "Idioma", themeDay: "Cambiar a modo día", themeNight: "Cambiar a modo noche", modeDay: "Día", modeNight: "Noche",
+  },
+  en: {
+    available: "Available for selected work", location: "Independent digital builder · Rosario, Argentina",
+    heroStatement: "I design and build digital products with a clear pulse: useful systems, memorable interfaces, and motion that earns its place.",
+    explore: "Explore selected work", github: "Explore GitHub", role: "Developer & creative builder", based: "Based in Rosario, Argentina",
+    scroll: "Scroll to explore", skip: "Skip to projects", caseLabel: "Selected case studies",
+    workTitle: "Selected work", workDesc: "Six projects that show range without losing the thread: product thinking, technical depth and visual instinct.",
+    projectLabel: "Scroll through the index", projectHint: "Keep scrolling to discover each build, or choose a project to jump ahead.",
+    live: "Live product", source: "Source code", liveLink: "Visit live build", sourceLink: "Inspect source",
+    approachLabel: "How I work", approachTitleA: "Design should be felt.", approachTitleB: "Engineering should prove it.",
+    approach1Title: "Product before pixels", approach1: "Each interface starts from a behavior worth improving, then gets a visual system that makes that behavior obvious.",
+    approach2Title: "Motion with a job", approach2: "Animation guides attention, explains change and gives a product tempo.",
+    approach3Title: "Signals over claims", approach3: "Real-time systems, accessibility, testing and thoughtful constraints say more than inflated metrics.",
+    labLabel: "Selected experiments", labTitle: "Side projects, serious craft", labDesc: "Desktop tools, student networks and visual direction — the rest of the archive, intentionally kept in view.",
+    keepScroll: "Keep scrolling to explore", contactLabel: "Start a good thing", contactTitleA: "Have a sharp idea?", contactTitleB: "Let's give it momentum.",
+    contactDesc: "I'm open to product collaborations, digital experiences and work where the details need to carry real weight.",
+    email: "Send an email", whatsapp: "WhatsApp", copy: "Copy email", copied: "Copied", footer: "Made with focus, not filler.",
+    languageLabel: "Language", themeDay: "Switch to day mode", themeNight: "Switch to night mode", modeDay: "Day", modeNight: "Night",
+  },
+} satisfies Record<Language, Record<string, string>>;
+
+const projectCopy: Record<Language, Record<string, Partial<Project>>> = {
+  es: {
+    chainwork: { kind: "Espacio de trabajo colaborativo", status: "Producto en línea", description: "Un espacio de trabajo en tiempo real para transformar ideas en avances compartidos y visibles.", detail: "Presencia, hojas de ruta, planificación con drag and drop, votaciones y archivos adjuntos: un sistema de producto completo, no un tablero estático.", signal: "Tiempo real / PWA" },
+    "major-scrims": { kind: "Plataforma competitiva de gaming", status: "Producto en línea", description: "El espacio competitivo para scrims y partidas personalizadas de Fortnite, pensado para una comunidad activa.", detail: "Un ecosistema en Next.js con autenticación, herramientas editoriales y una identidad visual propia de la arena.", signal: "Next.js / MongoDB" },
+    ucahub: { kind: "Centro de recursos universitarios", status: "Producto en línea", description: "Un lugar para encontrar, en un solo sitio, los recursos que necesita la comunidad universitaria.", detail: "Combina una experiencia en Next.js con Supabase, lectura de PDF y búsqueda asistida por IA para que la información útil esté al alcance.", signal: "Búsqueda / IA" },
+    pdfjedi: { kind: "Sistema de producto con IA", status: "Producto en línea", description: "Un flujo de trabajo con IA que convierte documentos PDF extensos en la base de un producto digital.", detail: "Transforma documentos en especificaciones técnicas, dirección UX/UI, contratos, presupuestos y hojas de ruta; conecta la estrategia con la ejecución.", signal: "PDF → producto" },
+    rox: { kind: "Chat anónimo efímero", status: "Producto en línea", description: "Un chat anónimo en tiempo real y sin servidores propios, donde las conversaciones están hechas para desaparecer.", detail: "Una idea simple define toda la experiencia: entrar sin fricción, conversar al instante y no guardar de más.", signal: "Tiempo real / efímero" },
+    hawl: { kind: "Herramientas gaming de baja latencia", status: "Producto en línea", description: "Un conjunto de ajustes reversibles para reducir la demora y mejorar el rendimiento en juegos.", detail: "Une una herramienta práctica con experiencias 3D y animaciones inmersivas.", signal: "3D / rendimiento" },
+    notita: { kind: "Aplicación de notas de escritorio", status: "Código / escritorio", description: "Una app de notas sencilla y rápida, pensada para usar con el teclado durante las clases." },
+    ucanet: { kind: "Comunidad universitaria", status: "En desarrollo", description: "Una comunidad seudónima para UCA Rosario, organizada por materias y años." , signal: "Sistema de producto"},
+    facundo: { kind: "Portfolio de animación", status: "Producto en línea", description: "Un portfolio expresivo para un animador 2D y artista de motion graphics.", signal: "Dirección visual" },
+    kanki: { kind: "Experiencia de turnos", status: "Producto en línea", description: "Una experiencia simple para reservar turnos y gestionar una barbería.", signal: "Diseño de servicios" },
+  },
+  en: {},
+};
+
+function localizeProject(project: Project, language: Language): Project {
+  return { ...project, ...projectCopy[language][project.id] };
+}
 
 function ProjectSignal({ project, compact = false }: { project: Project; compact?: boolean }) {
   return (
@@ -271,9 +334,40 @@ export default function PortfolioExperience() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [portraitColor, setPortraitColor] = useState(false);
+  const [language, setLanguage] = useState<Language>("es");
+  const [theme, setTheme] = useState<Theme>("night");
+  const [preferencesReady, setPreferencesReady] = useState(false);
+  const text = ui[language];
   const prefersReducedMotion = useReducedMotion();
   const workRef = useRef<HTMLElement>(null);
   const labRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const restorePreferences = window.setTimeout(() => {
+      try {
+        const storedLanguage = window.localStorage.getItem("portfolio-language");
+        const storedTheme = window.localStorage.getItem("portfolio-theme");
+        if (storedLanguage === "es" || storedLanguage === "en") setLanguage(storedLanguage);
+        if (storedTheme === "night" || storedTheme === "day") setTheme(storedTheme);
+      } catch {
+        // Keep the Spanish/night defaults when storage is unavailable.
+      }
+      setPreferencesReady(true);
+    }, 0);
+    return () => window.clearTimeout(restorePreferences);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = language === "es" ? "es-AR" : "en";
+    document.documentElement.dataset.theme = theme;
+    if (!preferencesReady) return;
+    try {
+      window.localStorage.setItem("portfolio-language", language);
+      window.localStorage.setItem("portfolio-theme", theme);
+    } catch {
+      // Theme and language still work for the current page session.
+    }
+  }, [language, theme, preferencesReady]);
 
   useEffect(() => {
     const section = workRef.current;
@@ -373,24 +467,34 @@ export default function PortfolioExperience() {
 
   return (
     <main id="top" className="site-shell">
-      <a className="skip-link" href="#work">Skip to projects</a>
+      <a className="skip-link" href="#work">{text.skip}</a>
       <div className="site-shell__atmosphere" aria-hidden="true" />
       <div className="site-shell__grid" aria-hidden="true" />
 
       <header className="site-nav">
-        <a href="#top" className="site-nav__mark" aria-label="Back to top">
+        <a href="#top" className="site-nav__mark" aria-label={language === "es" ? "Volver al inicio" : "Back to top"}>
           G<span>/</span>B
         </a>
         <p className="site-nav__availability">
-          <span /> available for selected work
+          <span /> {text.available}
         </p>
-        <nav className="site-nav__links" aria-label="Primary navigation">
+        <nav className="site-nav__links" aria-label={language === "es" ? "Navegación principal" : "Primary navigation"}>
           {navItems.map((item) => (
             <a key={item.href} href={item.href}>
-              {item.label}
+              {item.label[language]}
             </a>
           ))}
         </nav>
+        <div className="site-nav__tools">
+          <button type="button" className="site-nav__tool locale-toggle" onClick={() => setLanguage(value => value === "es" ? "en" : "es")} aria-label={`${text.languageLabel}: ${language === "es" ? "English" : "Español"}`} title={`${text.languageLabel}: ${language === "es" ? "English" : "Español"}`}>
+            <span className="locale-toggle__flag" role="img" aria-label={language === "es" ? "Argentina" : "United States"} style={{ backgroundImage: `url(https://flagsapi.com/${language === "es" ? "AR" : "US"}/flat/64.png)` }} />
+            <span>{language === "es" ? "ES" : "EN"}</span>
+          </button>
+          <button type="button" className="site-nav__tool theme-toggle" onClick={() => setTheme(value => value === "night" ? "day" : "night")} aria-label={theme === "night" ? text.themeDay : text.themeNight} title={theme === "night" ? text.themeDay : text.themeNight}>
+            {theme === "night" ? <Sun size={16} /> : <Moon size={16} />}
+            <span>{theme === "night" ? text.modeNight : text.modeDay}</span>
+          </button>
+        </div>
         <button
           type="button"
           className="site-nav__menu-button"
@@ -398,13 +502,13 @@ export default function PortfolioExperience() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((value) => !value)}
         >
-          <span className="sr-only">Toggle navigation</span>
+          <span className="sr-only">{language === "es" ? "Abrir navegación" : "Toggle navigation"}</span>
           {menuOpen ? <X size={19} /> : <Menu size={20} />}
         </button>
         <nav id="mobile-navigation" inert={!menuOpen} className={`mobile-navigation ${menuOpen ? "is-open" : ""}`} aria-label="Mobile navigation">
           {navItems.map((item) => (
             <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
-              {item.label}
+              {item.label[language]}
               <ArrowUpRight size={18} />
             </a>
           ))}
@@ -418,19 +522,19 @@ export default function PortfolioExperience() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="eyebrow"><span>01</span> Independent digital builder · Rosario, AR</p>
+          <p className="eyebrow"><span>01</span> {text.location}</p>
           <h1 id="hero-title" className="hero__title">
             Gonzalo <span>Bonadeo</span>
           </h1>
           <p className="hero__statement">
-            I design and build digital products with a clear pulse — useful systems, memorable interfaces, and motion that earns its place.
+            {text.heroStatement}
           </p>
           <div className="hero__actions">
             <a href="#work" className="button button--solid">
-              Explore selected work <MoveRight size={18} />
+              {text.explore} <MoveRight size={18} />
             </a>
             <a href="https://github.com/Gxnza48" target="_blank" rel="noreferrer" className="button button--quiet">
-              <Github size={17} /> GitHub archive
+              <Github size={17} /> {text.github}
             </a>
           </div>
         </motion.div>
@@ -442,13 +546,13 @@ export default function PortfolioExperience() {
           transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="portrait__orbit" aria-hidden="true" />
-          <button type="button" className={`portrait__frame ${portraitColor ? "is-color" : ""}`} onClick={() => setPortraitColor(value => !value)} aria-pressed={portraitColor} aria-label="Toggle portrait color">
+          <button type="button" className={`portrait__frame ${portraitColor ? "is-color" : ""}`} onClick={() => setPortraitColor(value => !value)} aria-pressed={portraitColor} aria-label={language === "es" ? "Alternar color de la foto" : "Toggle portrait color"}>
             <Image src="/gonzalo-portrait.png" alt="Gonzalo Bonadeo smiling" fill sizes="(max-width: 780px) 77vw, 430px" preload className="portrait__image" />
             <span className="portrait__shade" aria-hidden="true" />
-            <span className="portrait__caption" aria-hidden="true"><span>Gonzalo Bonadeo</span><small>Developer & creative builder</small></span>
-            <span className="portrait__switch" aria-hidden="true">{portraitColor ? "Color on" : "Explore in color"} <ArrowUpRight size={14} /></span>
+            <span className="portrait__caption" aria-hidden="true"><span>Gonzalo Bonadeo</span><small>{text.role}</small></span>
+            <span className="portrait__switch" aria-hidden="true">{portraitColor ? (language === "es" ? "Color activado" : "Color on") : (language === "es" ? "Ver en color" : "Explore in color")} <ArrowUpRight size={14} /></span>
           </button>
-          <span className="portrait__label">Based in Rosario, Argentina <span>↗</span></span>
+          <span className="portrait__label">{text.based} <span>↗</span></span>
         </motion.div>
 
         <motion.a
@@ -458,7 +562,7 @@ export default function PortfolioExperience() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          <span>Scroll to browse</span>
+          <span>{text.scroll}</span>
           <ArrowDown size={16} />
         </motion.a>
       </section>
@@ -471,14 +575,14 @@ export default function PortfolioExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
         >
-          <p className="eyebrow"><span>02</span> Curated case studies</p>
-          <h2 id="work-title">The build index<span>.</span></h2>
-          <p>Six projects that show range without losing the thread: product thinking, technical depth and visual instinct.</p>
+          <p className="eyebrow"><span>02</span> {text.caseLabel}</p>
+          <h2 id="work-title">{text.workTitle}<span>.</span></h2>
+          <p>{text.workDesc}</p>
         </motion.div>
 
         <div className="project-index">
-          <div className="project-index__rail" aria-label="Select a featured project">
-            <p className="project-index__label">Scroll through the index</p>
+          <div className="project-index__rail" aria-label={language === "es" ? "Elegí un proyecto destacado" : "Select a featured project"}>
+            <p className="project-index__label">{text.projectLabel}</p>
             <div className="project-index__list">
               {featuredProjects.map((project, index) => (
                 <button
@@ -494,7 +598,7 @@ export default function PortfolioExperience() {
                 </button>
               ))}
             </div>
-            <p className="project-index__hint">Keep scrolling to discover each build, or choose a project to jump ahead.</p>
+            <p className="project-index__hint">{text.projectHint}</p>
             <div className="work__progress" aria-hidden="true"><span /></div>
           </div>
 
@@ -507,29 +611,29 @@ export default function PortfolioExperience() {
                 initial={false}
                 style={{ "--project-accent": selectedProject.accent, "--project-soft-accent": selectedProject.softAccent } as CSSProperties}
               >
-                <ProjectVisual project={selectedProject} />
+                <ProjectVisual project={localizeProject(selectedProject, language)} />
                 <div className="project-stage__content">
                   <div className="project-stage__meta">
-                    <span className="status-dot">{selectedProject.status}</span>
-                    <span>{selectedProject.kind}</span>
+                    <span className="status-dot">{localizeProject(selectedProject, language).status}</span>
+                    <span>{localizeProject(selectedProject, language).kind}</span>
                   </div>
                   <div className="project-stage__title-row">
                     <h3>{selectedProject.title}</h3>
                     <span className="project-stage__index">/{selectedProject.index}</span>
                   </div>
-                  <p className="project-stage__lead">{selectedProject.description}</p>
-                  <p className="project-stage__detail">{selectedProject.detail}</p>
+                  <p className="project-stage__lead">{localizeProject(selectedProject, language).description}</p>
+                  <p className="project-stage__detail">{localizeProject(selectedProject, language).detail}</p>
                   <div className="tag-list">
                     {selectedProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
                   </div>
                   <div className="project-stage__actions">
                     {selectedProject.live && (
                       <a className="text-link" href={selectedProject.live} target="_blank" rel="noreferrer">
-                        Visit live build <ExternalLink size={16} />
+                        {text.liveLink} <ExternalLink size={16} />
                       </a>
                     )}
                     <a className="text-link text-link--muted" href={selectedProject.repo} target="_blank" rel="noreferrer">
-                      Inspect source <Github size={16} />
+                      {text.sourceLink} <Github size={16} />
                     </a>
                   </div>
                 </div>
@@ -547,24 +651,24 @@ export default function PortfolioExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
         >
-          <p className="eyebrow"><span>03</span> Working principle</p>
-          <h2 id="approach-title">Design should be felt.<br /><em>Engineering should prove it.</em></h2>
+          <p className="eyebrow"><span>03</span> {text.approachLabel}</p>
+          <h2 id="approach-title">{text.approachTitleA}<br /><em>{text.approachTitleB}</em></h2>
         </motion.div>
         <div className="approach__grid">
           <article>
             <span>01</span>
-            <h3>Product before pixels</h3>
-            <p>Each interface starts from a behavior worth improving, then gets a visual system that makes that behavior obvious.</p>
+            <h3>{text.approach1Title}</h3>
+            <p>{text.approach1}</p>
           </article>
           <article>
             <span>02</span>
-            <h3>Motion with a job</h3>
-            <p>Animation guides attention, explains change and gives a product tempo — never just decoration sitting on top.</p>
+            <h3>{text.approach2Title}</h3>
+            <p>{text.approach2}</p>
           </article>
           <article>
             <span>03</span>
-            <h3>Signals over claims</h3>
-            <p>Real-time systems, accessibility checks, tests, deploys and thoughtful constraints say more than inflated metrics.</p>
+            <h3>{text.approach3Title}</h3>
+            <p>{text.approach3}</p>
           </article>
         </div>
       </section>
@@ -577,13 +681,15 @@ export default function PortfolioExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
         >
-          <p className="eyebrow"><span>04</span> Selected experiments</p>
-          <h2 id="lab-title">Side quests, serious craft<span>.</span></h2>
-          <p>Desktop tools, student networks and visual identity work — the rest of the archive, intentionally kept in view.</p>
+          <p className="eyebrow"><span>04</span> {text.labLabel}</p>
+          <h2 id="lab-title">{text.labTitle}<span>.</span></h2>
+          <p>{text.labDesc}</p>
         </motion.div>
 
         <div className="experiment-grid">
-          {experiments.map((project, index) => (
+          {experiments.map((project, index) => {
+            const localizedProject = localizeProject(project, language);
+            return (
             <motion.article
               className="experiment-card"
               key={project.id}
@@ -593,23 +699,24 @@ export default function PortfolioExperience() {
               transition={{ delay: prefersReducedMotion ? 0 : index * 0.07 }}
               style={{ "--project-accent": project.accent, "--project-soft-accent": project.softAccent } as CSSProperties}
             >
-              <ProjectVisual project={project} compact />
+              <ProjectVisual project={localizedProject} compact />
               <div className="experiment-card__body">
-                <div className="experiment-card__meta"><span>{project.index}</span><span>{project.status}</span></div>
+                <div className="experiment-card__meta"><span>{project.index}</span><span>{localizedProject.status}</span></div>
                 <h3>{project.title}</h3>
-                <p>{project.description}</p>
+                <p>{localizedProject.description}</p>
                 <div className="tag-list tag-list--small">
                   {project.tags.slice(0, 3).map((tag) => <span key={tag}>{tag}</span>)}
                 </div>
                 <div className="experiment-card__links">
-                  <a href={project.repo} target="_blank" rel="noreferrer">Source <Github size={15} /></a>
-                  {project.live && <a href={project.live} target="_blank" rel="noreferrer">Live <ArrowUpRight size={15} /></a>}
+                  <a href={project.repo} target="_blank" rel="noreferrer">{text.source} <Github size={15} /></a>
+                  {project.live && <a href={project.live} target="_blank" rel="noreferrer">{text.liveLink} <ArrowUpRight size={15} /></a>}
                 </div>
               </div>
             </motion.article>
-          ))}
+            );
+          })}
         </div>
-        <p className="lab__direction">Keep scrolling to explore <MoveRight size={18} /></p>
+        <p className="lab__direction">{text.keepScroll} <MoveRight size={18} /></p>
         </div>
       </section>
 
@@ -621,21 +728,21 @@ export default function PortfolioExperience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          <p className="eyebrow"><span>05</span> Start a good thing</p>
-          <h2 id="contact-title">Have a sharp idea?<br /><em>Let&apos;s give it momentum.</em></h2>
-          <p>I&apos;m open to product collaborations, digital experiences and work where the details need to carry real weight.</p>
+          <p className="eyebrow"><span>05</span> {text.contactLabel}</p>
+          <h2 id="contact-title">{text.contactTitleA}<br /><em>{text.contactTitleB}</em></h2>
+          <p>{text.contactDesc}</p>
           <div className="contact__actions">
-            <a href="mailto:gonzalobonadeo07@gmail.com" className="button button--solid"><Mail size={17} /> Write an email</a>
+            <a href="mailto:gonzalobonadeo07@gmail.com" className="button button--solid"><Mail size={17} /> {text.email}</a>
             <a href="https://wa.me/5493415850155" target="_blank" rel="noreferrer" className="button button--quiet">WhatsApp <ArrowUpRight size={17} /></a>
             <button type="button" className="button button--quiet" onClick={copyEmail}>
               {copied ? <Check size={17} /> : <Copy size={17} />}
-              {copied ? "Copied" : "Copy address"}
+              {copied ? text.copied : text.copy}
             </button>
           </div>
         </motion.div>
         <footer className="site-footer">
           <span>© {new Date().getFullYear()} Gonzalo Bonadeo</span>
-          <span>Made with focus, not filler.</span>
+          <span>{text.footer}</span>
           <a href="https://github.com/Gxnza48" target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={14} /></a>
         </footer>
       </section>
