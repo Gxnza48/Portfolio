@@ -232,6 +232,13 @@ const navItems = [
   { href: "#contact", label: { es: "Contacto", en: "Contact" } },
 ];
 
+const mobileNavItems = [
+  ...navItems.slice(0, 3),
+  { href: "#approach", label: { es: "Cómo trabajo", en: "Approach" } },
+  { href: "#lab", label: { es: "Otros proyectos", en: "More projects" } },
+  navItems[3],
+];
+
 const ui = {
   es: {
     available: "Disponible para proyectos seleccionados", location: "Desarrollador digital independiente · Rosario, Argentina",
@@ -342,6 +349,7 @@ export default function PortfolioExperience() {
   const prefersReducedMotion = useReducedMotion();
   const workRef = useRef<HTMLElement>(null);
   const labRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const restorePreferences = window.setTimeout(() => {
@@ -449,12 +457,21 @@ export default function PortfolioExperience() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
     };
-
+    const handleOutsidePress = (event: PointerEvent) => {
+      if (event.target instanceof Element && !event.target.closest(".site-nav")) setMenuOpen(false);
+    };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+    if (menuOpen) window.addEventListener("pointerdown", handleOutsidePress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("pointerdown", handleOutsidePress);
+    };
+  }, [menuOpen]);
 
   const copyEmail = async () => {
     try {
@@ -499,15 +516,16 @@ export default function PortfolioExperience() {
         <button
           type="button"
           className="site-nav__menu-button"
+          ref={menuButtonRef}
           aria-controls="mobile-navigation"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((value) => !value)}
         >
-          <span className="sr-only">{language === "es" ? "Abrir navegación" : "Toggle navigation"}</span>
+          <span className="sr-only">{language === "es" ? (menuOpen ? "Cerrar navegación" : "Abrir navegación") : (menuOpen ? "Close navigation" : "Open navigation")}</span>
           {menuOpen ? <X size={19} /> : <Menu size={20} />}
         </button>
-        <nav id="mobile-navigation" inert={!menuOpen} className={`mobile-navigation ${menuOpen ? "is-open" : ""}`} aria-label="Mobile navigation">
-          {navItems.map((item) => (
+        <nav id="mobile-navigation" inert={!menuOpen} className={`mobile-navigation ${menuOpen ? "is-open" : ""}`} aria-label={language === "es" ? "Navegación móvil" : "Mobile navigation"}>
+          {mobileNavItems.map((item) => (
             <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
               {item.label[language]}
               <ArrowUpRight size={18} />
@@ -546,14 +564,19 @@ export default function PortfolioExperience() {
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
+          <div className="portrait__image-wrap">
           <span className="portrait__orbit" aria-hidden="true" />
           <button type="button" className={`portrait__frame ${portraitColor ? "is-color" : ""}`} onClick={() => setPortraitColor(value => !value)} aria-pressed={portraitColor} aria-label={language === "es" ? "Alternar color de la foto" : "Toggle portrait color"}>
-            <Image src="/gonzalo-portrait.png" alt="Gonzalo Bonadeo smiling" fill sizes="(max-width: 780px) 77vw, 430px" preload className="portrait__image" />
+            <Image src="/gonzalo-portrait.png" alt={language === "es" ? "Retrato de Gonzalo Bonadeo" : "Portrait of Gonzalo Bonadeo"} width={304} height={365} loading="eager" fetchPriority="high" className="portrait__image" />
             <span className="portrait__shade" aria-hidden="true" />
-            <span className="portrait__caption" aria-hidden="true"><span>Gonzalo Bonadeo</span><small>{text.role}</small></span>
-            <span className="portrait__switch" aria-hidden="true">{portraitColor ? (language === "es" ? "Color activado" : "Color on") : (language === "es" ? "Ver en color" : "Explore in color")} <ArrowUpRight size={14} /></span>
           </button>
-          <span className="portrait__label">{text.based} <span>↗</span></span>
+          </div>
+          <div className="portrait__identity">
+            <p className="portrait__name">Gonzalo Bonadeo</p>
+            <p className="portrait__role">{text.role}</p>
+            <span className="portrait__label">{text.based}</span>
+            <span className="portrait__hint">{portraitColor ? (language === "es" ? "Color activado" : "Color on") : (language === "es" ? "Tocá la foto para ver el color" : "Tap the photo to reveal color")} <ArrowUpRight size={13} /></span>
+          </div>
         </motion.div>
 
         <motion.a
