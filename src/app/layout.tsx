@@ -4,6 +4,7 @@ import "./globals.css";
 import "devicon/devicon.min.css";
 import "./capabilities.css";
 import "./responsive.css";
+import "./navigation.css";
 import React from "react";
 
 const spaceGrotesk = Space_Grotesk({

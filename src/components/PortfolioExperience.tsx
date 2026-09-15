@@ -13,11 +13,9 @@ import {
   ExternalLink,
   Github,
   Mail,
-  Menu,
   MoveRight,
   Moon,
   Sun,
-  X,
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import type { CSSProperties } from "react";
@@ -340,6 +338,7 @@ function ProjectVisual({ project, compact = false }: { project: Project; compact
 export default function PortfolioExperience() {
   const [activeProject, setActiveProject] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const [copied, setCopied] = useState(false);
   const [portraitColor, setPortraitColor] = useState(false);
   const [language, setLanguage] = useState<Language>("es");
@@ -350,6 +349,32 @@ export default function PortfolioExperience() {
   const workRef = useRef<HTMLElement>(null);
   const labRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      let current = "";
+      mobileNavItems.forEach(({ href }) => {
+        const section = document.getElementById(href.slice(1));
+        if (section && section.getBoundingClientRect().top <= window.innerHeight * .35) current = href;
+      });
+      setActiveSection(current);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const media = window.matchMedia("(min-width: 900px)");
+    const closeOnDesktop = () => { if (media.matches) setMenuOpen(false); };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    media.addEventListener("change", closeOnDesktop);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      media.removeEventListener("change", closeOnDesktop);
+    };
+  }, []);
 
   useEffect(() => {
     const restorePreferences = window.setTimeout(() => {
@@ -489,17 +514,16 @@ export default function PortfolioExperience() {
       <div className="site-shell__atmosphere" aria-hidden="true" />
       <div className="site-shell__grid" aria-hidden="true" />
 
-      <header className="site-nav">
-        <a href="#top" className="site-nav__mark" aria-label={language === "es" ? "Volver al inicio" : "Back to top"}>
-          G<span>/</span>B
+      <header className={`site-nav nav-design ${menuOpen ? "nav-design--open" : ""}`}>
+        <a href="#top" className="site-nav__mark" onClick={() => setMenuOpen(false)} aria-label={language === "es" ? "Volver al inicio" : "Back to top"}>
+          <b className="nav-monogram">g<span>.</span>b</b>
+          <span className="nav-signature">Gonzalo<br />Bonadeo</span>
         </a>
-        <p className="site-nav__availability">
-          <span /> {text.available}
-        </p>
         <nav className="site-nav__links" aria-label={language === "es" ? "Navegación principal" : "Primary navigation"}>
           {navItems.map((item) => (
-            <a key={item.href} href={item.href}>
+            <a key={item.href} href={item.href} aria-current={activeSection === item.href ? "location" : undefined}>
               {item.label[language]}
+              {item.href === "#contact" && <ArrowUpRight size={14} />}
             </a>
           ))}
         </nav>
@@ -522,15 +546,18 @@ export default function PortfolioExperience() {
           onClick={() => setMenuOpen((value) => !value)}
         >
           <span className="sr-only">{language === "es" ? (menuOpen ? "Cerrar navegación" : "Abrir navegación") : (menuOpen ? "Close navigation" : "Open navigation")}</span>
-          {menuOpen ? <X size={19} /> : <Menu size={20} />}
+          <span className="nav-menu-glyph" aria-hidden="true"><i /><i /></span>
         </button>
         <nav id="mobile-navigation" inert={!menuOpen} className={`mobile-navigation ${menuOpen ? "is-open" : ""}`} aria-label={language === "es" ? "Navegación móvil" : "Mobile navigation"}>
-          {mobileNavItems.map((item) => (
-            <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
-              {item.label[language]}
+          <div className="nav-panel-heading"><span>{language === "es" ? "Explorá el portfolio" : "Explore the portfolio"}</span><span>01 — 06</span></div>
+          {mobileNavItems.map((item, index) => (
+            <a key={item.href} href={item.href} aria-current={activeSection === item.href ? "location" : undefined} onClick={() => setMenuOpen(false)}>
+              <span className="nav-item-number">0{index + 1}</span>
+              <span className="nav-item-label">{item.label[language]}</span>
               <ArrowUpRight size={18} />
             </a>
           ))}
+          <div className="nav-panel-footer"><span className="nav-status" />{text.available}<span>ARG ↗</span></div>
         </nav>
       </header>
 
